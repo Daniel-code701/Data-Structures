@@ -75,16 +75,52 @@ public class Array {
 
     // 获取index索引位置的元素
     public int get(int index){
-        if(index < 0 || index >= size)
+        if(index < 0 || index >= size) {
             throw new IllegalArgumentException("Get failed. Index is illegal.");
+        }
         return data[index];
     }
 
     // 修改index索引位置的元素为e
     public void set(int index, int e){
-        if(index < 0 || index >= size)
+        if(index < 0 || index >= size) {
             throw new IllegalArgumentException("Set failed. Index is illegal.");
+        }
         data[index] = e;
+    }
+
+    //查找数组中是否有元素e
+    public boolean contains(int e){
+        for(int i = 0; i < size; i ++){
+            if(data[i] == e){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //查找数组中元素的索引 如果不存在元素e  则返回-1
+    public int fine(int e){
+        for(int i = 0; i < size; i ++){
+            if(data[e] == i){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //从数组中删除元素
+    public int Delect(int index){
+        if(index < 0 || index >= size) {
+            throw new IllegalArgumentException("Set failed. Index is illegal.");
+        }
+
+        int res = data[index];
+
+        for(int i = index + 1; i < size; i ++){
+            data[i - 1] = data[i];
+        }
+        return res;
     }
 
     @Override

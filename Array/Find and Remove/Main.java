@@ -11,5 +11,8 @@ public class Main {
 
         arr.addFirst(-1);
         System.out.println(arr);
+
+        arr.Delect(1);
+        System.out.println(arr);
     }
 }
