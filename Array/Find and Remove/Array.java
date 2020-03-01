@@ -100,9 +100,9 @@ public class Array {
     }
 
     //查找数组中元素的索引 如果不存在元素e  则返回-1
-    public int fine(int e){
+    public int find(int e){
         for(int i = 0; i < size; i ++){
-            if(data[e] == i){
+            if(data[i] == e){
                 return i;
             }
         }
@@ -110,7 +110,7 @@ public class Array {
     }
 
     //从数组中删除元素
-    public int Delect(int index){
+    public int remove(int index){
         if(index < 0 || index >= size) {
             throw new IllegalArgumentException("Set failed. Index is illegal.");
         }
@@ -120,7 +120,27 @@ public class Array {
         for(int i = index + 1; i < size; i ++){
             data[i - 1] = data[i];
         }
+
+        size --;
         return res;
+    }
+
+    // 从数组中删除第一个元素, 返回删除的元素
+    public int removeFirst(){
+        return remove(0);
+    }
+
+    // 从数组中删除最后一个元素, 返回删除的元素
+    public int removeLast(){
+        return remove(size - 1);
+    }
+
+    //从数组中删除元素e
+    public void removeElement(int e){
+        int index = find(e);
+        if(index != -1){
+            remove(index);
+        }
     }
 
     @Override

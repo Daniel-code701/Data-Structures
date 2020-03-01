@@ -12,7 +12,16 @@ public class Main {
         arr.addFirst(-1);
         System.out.println(arr);
 
-        arr.Delect(1);
+        arr.remove(1);
+        System.out.println(arr);
+
+        arr.removeElement(1);
+        System.out.println(arr);
+
+        arr.removeFirst();
+        System.out.println(arr);
+
+        arr.removeLast();
         System.out.println(arr);
     }
 }
