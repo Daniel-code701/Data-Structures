@@ -1,14 +1,11 @@
-import java.util.Arrays;
+public class Array<E> {
 
-public class Array {
-    //定义一个成员变量
-    private int[] data;
-    //用来描述data数组中到底有多少个元素
+    private E[] data;
     private int size;
 
     // 构造函数，传入数组的容量capacity构造Array
     public Array(int capacity){
-        data = new int[capacity];
+        data = (E[])new Object[capacity];
         size = 0;
     }
 
@@ -17,144 +14,142 @@ public class Array {
         this(10);
     }
 
-    //获取数组元素个数
-    public int getSize() {
-        return size;
-    }
-
-    //获取数组容量
-    public int getCapacity() {
+    // 获取数组的容量
+    public int getCapacity(){
         return data.length;
     }
 
-    //判断数组是否为空
+    // 获取数组中的元素个数
+    public int getSize(){
+        return size;
+    }
+
+    // 返回数组是否为空
     public boolean isEmpty(){
         return size == 0;
     }
 
+    // 在index索引的位置插入一个新元素e
+    public void add(int index, E e){
+
+        if(index < 0 || index > size)
+            throw new IllegalArgumentException("Add failed. Require index >= 0 and index <= size.");
+
+        if(size == data.length)
+            resize(2 * data.length);
+
+        for(int i = size - 1; i >= index ; i --)
+            data[i + 1] = data[i];
+
+        data[index] = e;
+
+        size ++;
+    }
+
     // 向所有元素后添加一个新元素
-    public void addLast(int e){
-
-//        //容量已满 抛出异常
-//        if (size == data.length) {
-//            throw new IllegalArgumentException("AddLast failed. Array is full.");
-//        }
-//        //数组的元素==传入的元素  size ++
-//        data[size] = e;
-//        size ++;
-
-        //在创建完add方法后 可以直接调用add方法来实现
+    public void addLast(E e){
         add(size, e);
     }
 
     // 在所有元素前添加一个新元素
-    public void addFirst(int e){
+    public void addFirst(E e){
         add(0, e);
     }
 
-    //在数组中index位置插入一个元素
-    public void add(int index,int e){
-        if (size == data.length) {
-            throw new IllegalArgumentException("add failed. Array is full.");
-        }
-
-        //判断index
-        if (index < 0 || index > size) {
-            throw new IllegalArgumentException("add failed. Array is full.");
-        }
-
-        //因为要向指定位置插入一个元素 所以就要把data中原有的元素向后挪一个位置
-        for (int i = size - 1; i >= index; i --) {
-                data[i + 1] = data[i];
-        }
-
-        data[index] = e;
-        size ++;
-    }
-
-
     // 获取index索引位置的元素
-    public int get(int index){
-        if(index < 0 || index >= size) {
+    public E get(int index){
+        if(index < 0 || index >= size)
             throw new IllegalArgumentException("Get failed. Index is illegal.");
-        }
         return data[index];
     }
 
+    public E getLast(){
+        return get(size - 1);
+    }
+
+    public E getFirst(){
+        return get(0);
+    }
+
     // 修改index索引位置的元素为e
-    public void set(int index, int e){
-        if(index < 0 || index >= size) {
+    public void set(int index, E e){
+        if(index < 0 || index >= size)
             throw new IllegalArgumentException("Set failed. Index is illegal.");
-        }
         data[index] = e;
     }
 
-    //查找数组中是否有元素e
-    public boolean contains(int e){
-        for(int i = 0; i < size; i ++){
-            if(data[i] == e){
+    // 查找数组中是否有元素e
+    public boolean contains(E e){
+        for(int i = 0 ; i < size ; i ++){
+            if(data[i].equals(e))
                 return true;
-            }
         }
         return false;
     }
 
-    //查找数组中元素的索引 如果不存在元素e  则返回-1
-    public int find(int e){
-        for(int i = 0; i < size; i ++){
-            if(data[i] == e){
+    // 查找数组中元素e所在的索引，如果不存在元素e，则返回-1
+    public int find(E e){
+        for(int i = 0 ; i < size ; i ++){
+            if(data[i].equals(e))
                 return i;
-            }
         }
         return -1;
     }
 
-    //从数组中删除元素
-    public int remove(int index){
-        if(index < 0 || index >= size) {
-            throw new IllegalArgumentException("Set failed. Index is illegal.");
-        }
+    // 从数组中删除index位置的元素, 返回删除的元素
+    public E remove(int index){
+        if(index < 0 || index >= size)
+            throw new IllegalArgumentException("Remove failed. Index is illegal.");
 
-        int res = data[index];
-
-        for(int i = index + 1; i < size; i ++){
+        E ret = data[index];
+        for(int i = index + 1 ; i < size ; i ++)
             data[i - 1] = data[i];
-        }
-
         size --;
-        return res;
+        data[size] = null; // loitering objects != memory leak
+
+        if(size == data.length / 4 && data.length / 2 != 0)
+            resize(data.length / 2);
+        return ret;
     }
 
     // 从数组中删除第一个元素, 返回删除的元素
-    public int removeFirst(){
+    public E removeFirst(){
         return remove(0);
     }
 
     // 从数组中删除最后一个元素, 返回删除的元素
-    public int removeLast(){
+    public E removeLast(){
         return remove(size - 1);
     }
 
-    //从数组中删除元素e
-    public void removeElement(int e){
+    // 从数组中删除元素e
+    public void removeElement(E e){
         int index = find(e);
-        if(index != -1){
+        if(index != -1)
             remove(index);
-        }
     }
 
     @Override
-    public String toString() {
-       StringBuilder res = new StringBuilder();
-       res.append(String.format("Array: size = %d, capacity: %d\n", size, data.length));
-       res.append('[');
-       for(int i = 0; i < size; i ++){
-           res.append(data[i]);
-           if(i != size -1){
-                res.append(',');
-           }
-       }
-       res.append(']');
-       return res.toString();
+    public String toString(){
+
+        StringBuilder res = new StringBuilder();
+        res.append(String.format("Array: size = %d , capacity = %d\n", size, data.length));
+        res.append('[');
+        for(int i = 0 ; i < size ; i ++){
+            res.append(data[i]);
+            if(i != size - 1)
+                res.append(", ");
+        }
+        res.append(']');
+        return res.toString();
+    }
+
+    // 将数组空间的容量变成newCapacity大小
+    private void resize(int newCapacity){
+
+        E[] newData = (E[])new Object[newCapacity];
+        for(int i = 0 ; i < size ; i ++)
+            newData[i] = data[i];
+        data = newData;
     }
 }
